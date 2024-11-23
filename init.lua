@@ -629,6 +629,37 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+        vtsls = {
+          capabilities = capabilities,
+          filetypes = { 'typescript', 'javascript', 'vue' },
+          settings = {
+            vtsls = {
+              tsserver = {
+                globalPlugins = {
+                  {
+                    name = '@vue/typescript-plugin',
+                    location = require('mason-registry').get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server',
+                    languages = { 'vue' },
+                    configNamespace = 'typescript',
+                    enableForWorkspaceTypeScriptVersions = true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        volar = {
+          settings = {
+            vue = {
+              complete = {
+                casing = {
+                  props = 'kebab',
+                  tags = 'kebab',
+                },
+              },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -659,6 +690,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'cspell',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -672,6 +704,21 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+        ensure_installed = {
+          'eslint',
+          'emmet_language_server',
+          'volar',
+          'unocss',
+          'lua_ls',
+          'cssls',
+          'html',
+          'vtsls',
+          'jsonls',
+          'rust_analyzer',
+          'yamlls',
+          'dockerls',
+          'intelephense',
         },
       }
     end,
