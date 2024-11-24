@@ -19,6 +19,18 @@ local function rebuild_project(co, path)
   coroutine.yield()
 end
 
+local function get_dbg_path()
+  local path = ''
+  if require('easy-dotnet.extensions').isWindows() then
+    local debug_path = 'TODO'
+    path = debug_path
+  else
+    local debug_path = '/usr/local/bin/netcoredbg/netcoredbg'
+    path = debug_path
+  end
+  return path
+end
+
 M.register_net_dap = function()
   local dap = require 'dap'
   local dotnet = require 'easy-dotnet'
@@ -64,7 +76,7 @@ M.register_net_dap = function()
 
   dap.adapters.coreclr = {
     type = 'executable',
-    command = '/usr/local/bin/netcoredbg/netcoredbg',
+    command = get_dbg_path(),
     args = { '--interpreter=vscode' },
   }
 end
